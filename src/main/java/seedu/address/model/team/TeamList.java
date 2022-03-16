@@ -37,4 +37,12 @@ public class TeamList {
         this.list.add(person);
     }
 
+    public void removePerson(int index) {
+        this.list.remove(index);
+    }
+
+    public void removePerson(Person person) {
+        this.list.remove(person);
+    }
+
 }
