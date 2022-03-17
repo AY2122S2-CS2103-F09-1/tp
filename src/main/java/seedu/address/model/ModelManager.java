@@ -6,12 +6,16 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
+import seedu.address.model.lineup.Lineup;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -22,6 +26,7 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
+    private final MyGm myGm;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -33,6 +38,7 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
+        this.myGm = new MyGm();
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
     }
 
@@ -120,6 +126,15 @@ public class ModelManager implements Model {
     @Override
     public ObservableList<Person> getFilteredPersonList() {
         return filteredPersons;
+    }
+
+    @Override
+    public Map<Person, List<Lineup>> getPlayerLineup() {
+        Map<Person, List<Lineup>> filteredLineups = new HashMap<Person, List<Lineup>>();
+        for (Person person : filteredPersons) {
+            filteredLineups.put(person, myGm.getPlayerLineup(person));
+        }
+        return filteredLineups;
     }
 
     @Override

@@ -1,10 +1,13 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.lineup.Lineup;
 import seedu.address.model.person.Person;
 
 /**
@@ -78,6 +81,9 @@ public interface Model {
 
     /** Returns an unmodifiable view of the filtered person list */
     ObservableList<Person> getFilteredPersonList();
+
+    /** Returns a mapping of filtered players to lineups they belong to. */
+    Map<Person, List<Lineup>> getPlayerLineup();
 
     /**
      * Updates the filter of the filtered person list to filter by the given {@code predicate}.
