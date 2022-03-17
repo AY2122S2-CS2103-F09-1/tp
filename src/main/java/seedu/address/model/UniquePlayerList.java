@@ -10,6 +10,8 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.team.Team;
 
+import javax.sound.sampled.Line;
+
 /**
  * Represents all plauers contained in the system..
  * Contains the set of all players, a map from players to their teams,
@@ -27,6 +29,16 @@ public class UniquePlayerList {
         this.nameToPersonMap = new HashMap<Name, Person>();
         this.personToTeamMap = new HashMap<Person, Team>();
         this.personToLineupMap = new HashMap<Person, List<Lineup>>();
+    }
+
+    /**
+     * Gets the list of lineups a player belongs to.
+     */
+    public List<Lineup> getPlayerLineup(Person player) {
+        if (this.containsPerson(player)) {
+            return this.personToLineupMap.get(player);
+        }
+        return new ArrayList<Lineup>();
     }
 
     /**
