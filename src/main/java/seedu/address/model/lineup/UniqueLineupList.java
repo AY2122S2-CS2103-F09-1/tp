@@ -1,27 +1,23 @@
-package seedu.address.model;
+package seedu.address.model.lineup;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
-import seedu.address.model.lineup.Lineup;
-import seedu.address.model.lineup.LineupName;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import seedu.address.model.person.Person;
+import seedu.address.model.schedule.Schedule;
+import seedu.address.model.schedule.UniqueScheduleList;
 
 
 /**
  * Represents a list of unique Teams
  */
-public class UniqueLineupList {
-    private final List<Lineup> list;
-
-    /**
-     * Constructs a {@code UniqueLineupList}
-     */
-    public UniqueLineupList() {
-        this.list = new ArrayList<Lineup>();
-    }
+public class UniqueLineupList implements Iterable<Lineup> {
+    private final ObservableList<Lineup> internalList = FXCollections.observableArrayList();
+    private final ObservableList<Lineup> internalUnmodifiableList =
+            FXCollections.unmodifiableObservableList(internalList);
 
     /**
      * Adds a lineup to the list
@@ -30,7 +26,7 @@ public class UniqueLineupList {
      */
     public void addLineupToList(Lineup lineup) {
         requireNonNull(lineup);
-        this.list.add(lineup);
+        this.internalList.add(lineup);
     }
 
     /**
@@ -40,7 +36,7 @@ public class UniqueLineupList {
      */
     public void deleteLineupFromList(Lineup lineup) {
         requireNonNull(lineup);
-        this.list.remove(lineup);
+        this.internalList.remove(lineup);
     }
 
     /**
@@ -50,9 +46,9 @@ public class UniqueLineupList {
      */
     public void deleteLineupNameFromList(LineupName lineupName) {
         requireNonNull(lineupName);
-        for (Lineup lineup : list) {
+        for (Lineup lineup : internalList) {
             if (lineup.sameLineupName(lineupName)) {
-                this.list.remove(lineup);
+                this.internalList.remove(lineup);
             }
         }
     }
@@ -65,7 +61,7 @@ public class UniqueLineupList {
      */
     public boolean containsLineup(Lineup lineup) {
         requireNonNull(lineup);
-        return this.list.contains(lineup);
+        return this.internalList.contains(lineup);
     }
 
     /**
@@ -76,7 +72,7 @@ public class UniqueLineupList {
      */
     public boolean containsLineupName(LineupName lineupName) {
         requireNonNull(lineupName);
-        for (Lineup lineup : list) {
+        for (Lineup lineup : internalList) {
             if (lineup.sameLineupName(lineupName)) {
                 return true;
             }
@@ -94,7 +90,7 @@ public class UniqueLineupList {
         if (!containsLineupName(lineupName)) {
             return null;
         } else {
-            for (Lineup lineup: list) {
+            for (Lineup lineup: internalList) {
                 if (lineup.sameLineupName(lineupName)) {
                     return lineup;
                 }
@@ -162,7 +158,7 @@ public class UniqueLineupList {
      * @param removedPlayer The player to be deleted
      */
     public void deletePlayerFromALlLineups(Person removedPlayer) {
-        for (Lineup lineup : list) {
+        for (Lineup lineup : internalList) {
             deletePlayerFromLineup(removedPlayer, lineup);
         }
     }
@@ -174,9 +170,33 @@ public class UniqueLineupList {
      * @param addedPlayer The new player to replace the old player
      */
     public void replacePlayerInAllLineups(Person removedPlayer, Person addedPlayer) {
-        for (Lineup lineup : list) {
+        for (Lineup lineup : internalList) {
             replacePlayerInLineup(removedPlayer, addedPlayer, lineup);
         }
+    }
+
+    /**
+     * Returns the backing list as an unmodifiable {@code ObservableList}.
+     */
+    public ObservableList<Lineup> asUnmodifiableObservableList() {
+        return internalUnmodifiableList;
+    }
+
+    @Override
+    public Iterator<Lineup> iterator() {
+        return internalList.iterator();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+                || (other instanceof UniqueLineupList // instanceof handles nulls
+                && internalList.equals(((UniqueLineupList) other).internalList));
+    }
+
+    @Override
+    public int hashCode() {
+        return internalList.hashCode();
     }
 
 }
